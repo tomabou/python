@@ -2,7 +2,6 @@
 import re
 import heapq
 
-
 PATTERN = re.compile("普通名詞")
 print("hello")
 KATAKANA = [chr(i) for i in range(12449, 12532+1)]
@@ -30,8 +29,8 @@ for line in FILE:
 
 start = i 
 goal = i+1 
-make_node(start, 'ショウ', 10, "スタート")
-make_node(goal, 'エグサ', 10, 'ゴール')
+make_node(start, 'メガネ', 10, "スタート")
+make_node(goal, 'イチゴ', 10, 'ゴール')
 
 que = [] 
 heapq.heappush(que, (0, start))
@@ -49,7 +48,7 @@ while que != []:
 
         if oyomi != nyomi and nyomi in yomi_to_index:
             for nindex in yomi_to_index[nyomi]:
-                ncost = cost + 1 + 500/index_profile[nindex][1]
+                ncost = cost + 1 + 5000/index_profile[nindex][1]
                 if not nindex in costs:
                     costs[nindex] = ncost
                     preindex[nindex] = v
