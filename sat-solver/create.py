@@ -1,4 +1,4 @@
-size = 3
+size = 2
 target = [1,2]
 l = len(target)
 s = "; sp-1 problme\n"
@@ -38,14 +38,11 @@ def groups(n):
                         ans.add(tuple(nl))
         return list(ans)
 
-for g in groups(3):
-    print(g)
-
 def group_comdition(x,y,group,index):
     for pos in group:
         if not is_member(x+pos[0],y+pos[1]):
             return False
-    cnd = "  (and\n"
+    cnd = " (and\n"
     bd = [[False for i in range(size*2+1)] for j in range(size*2+1)]    
     for pos in group:
         bd[x+pos[0]][y+pos[1]] = True
@@ -53,14 +50,14 @@ def group_comdition(x,y,group,index):
         for j in range(size*2-1):
             if is_member(i,j):
                 if bd[i][j]:
-                    cnd += "    ( = n_{}_{} {})\n".format(x+pos[0],y+pos[1],index)
+                    cnd += "    ( = n_{}_{} {})\n".format(i,j,index)
                 else:
-                    cnd += "    (!= n_{}_{} {})\n".format(x+pos[0],y+pos[1],index)
+                    cnd += "    (!= n_{}_{} {})\n".format(i,j,index)
     cnd += "  )\n"
     return cnd
 
-s += "( or\n"
 for index in range(len(target)):
+    s += "( or\n"
     gs = groups(target[index])
     for g in gs:
         for i in range(2*size+1):
@@ -70,7 +67,7 @@ for index in range(len(target)):
                     continue
                 else:
                     s += cnd
-s+=")\n"
+    s+=")\n"
 
 vals = ""
 for i in range(2*size+1):
