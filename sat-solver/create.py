@@ -1,5 +1,6 @@
 size = 5
-target = [6,6,6,6,6,6]
+target = [6,6,6,5,5]
+filename = "easy.txt"
 l = len(target)
 s = "; sp-1 problme\n"
 
@@ -51,8 +52,8 @@ def group_comdition(x,y,group,index):
             if is_member(i,j):
                 if bd[i][j]:
                     cnd += "    ( = n_{}_{} {})\n".format(i,j,index)
-#                else:
-#                    cnd += "    (!= n_{}_{} {})\n".format(i,j,index)
+                else:
+                    cnd += "    (!= n_{}_{} {})\n".format(i,j,index)
     cnd += "  )\n"
     return cnd
 
@@ -99,7 +100,8 @@ for i in range(2*size+1):
         if is_member(i,j)and is_member(i+1,j+1):
             s+=condition(i,j,i+1,j+1)
 s+=";END\n"
-f = open('text.txt', 'w') 
+
+f = open(filename, 'w') 
 
 f.write(s) 
 f.close() 
