@@ -1,5 +1,5 @@
-size = 2
-target = [1,2]
+size = 5
+target = [6,6,6,6,6,6]
 l = len(target)
 s = "; sp-1 problme\n"
 
@@ -51,8 +51,8 @@ def group_comdition(x,y,group,index):
             if is_member(i,j):
                 if bd[i][j]:
                     cnd += "    ( = n_{}_{} {})\n".format(i,j,index)
-                else:
-                    cnd += "    (!= n_{}_{} {})\n".format(i,j,index)
+#                else:
+#                    cnd += "    (!= n_{}_{} {})\n".format(i,j,index)
     cnd += "  )\n"
     return cnd
 
