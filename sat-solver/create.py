@@ -1,15 +1,19 @@
-size = 3
-target = [4,4,2]
-filename = "test2.txt"
+size = 5
+target = [6,6,6,6,6,6]
+filename = "sp1.txt"
 l = len(target)
 s = "; sp-1 problme\n"
+zerolist = [(0,2),(1,0),(1,4),(2,2),(3,2),(3,6),(4,4),(5,2),(5,5),(5,7),(6,4),(8,7)]
 
 def is_member(p,q):
     return (0<=p<=size*2-2)and(0<=q<size*2-1)and(-size<p-q<size)
 for i in range(2*size+1):
     for j in range(2*size+1):
         if is_member(i,j):
-            s+= "(int n_{}_{} 0 {})\n".format(i,j,l)
+            if (i,j) in zerolist:
+                s+= "(int n_{}_{} 0 )\n".format(i,j)
+            else:
+                s+= "(int n_{}_{} 0 {})\n".format(i,j,l)
 
 def nexts(p):
     a = p[0]
@@ -50,6 +54,8 @@ def group_comdition(x,y,group,index):
         for j in range(size*2-1):
             if is_member(i,j):
                 if bd[i][j]:
+                    if (i,j) in zerolist:
+                        return False
                     cnd += "    ( = n_{}_{} {})\n".format(i,j,index)
 #                else:
 #                    cnd += "    (!= n_{}_{} {})\n".format(i,j,index)
