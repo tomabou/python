@@ -1,6 +1,6 @@
-size = 5
-target = [6,6,6,6,8]
-filename = "easy.txt"
+size = 3
+target = [4,4,2]
+filename = "test2.txt"
 l = len(target)
 s = "; sp-1 problme\n"
 
@@ -29,7 +29,6 @@ def groups(n):
                     l = list(g)
                     if new not in l:
                         l.append(new)
-                        l.sort()
                         mx = 0
                         my = 0
                         for p in l:
