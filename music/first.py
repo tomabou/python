@@ -5,6 +5,9 @@ import wave
 def sin_func(x):
     return np.sin(2*np.pi*x)
 
+def san_func(x):
+    return np.abs(x*4-2) - 1
+
 def noko_func(x):
     return x*2-1
 
