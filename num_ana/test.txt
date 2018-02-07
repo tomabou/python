@@ -1,0 +1,11 @@
+{
+    "window.zoomLevel": 0,
+    "terminal.external.windowsExec": "%COMSPEC%",
+    "rust.rustLangSrcPath": "C:\\Users\\kazu8\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\src\\rust\\src",
+    "python.disablePromptForFeatures": [
+        "pylint"
+    ]
+    //"python.pythonPath": "C:\\Users\\kazu8\\.conda\\envs\\ventus\\python.exe",
+    //"python.venvPath": "C:\\Users\\kazu8\\.conda",
+    //"python.autoComplete.extraPaths": ["C:\\Users\\kazu8\\.conda\\envs\\ventus\\Scripts"]
+}
