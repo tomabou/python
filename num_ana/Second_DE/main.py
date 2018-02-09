@@ -1,16 +1,30 @@
 import numpy as np
-import seaborn as sns
 from matplotlib import pyplot as plt
 import os.path
 
+def forward_euler(h,T):
+    p = 1
+    q = 0  
+    p_res = []
+    q_res = []
+
+    for i in range(100):
+        p_res.append(p)
+        q_res.append(q)
+        p1 = p + h*(-q)
+        q1 = q + h*(p)
+        p = p1
+        q = q1
+    return (p_res,q_res)
+
+
 if __name__ =="__main__":
-    matrix = np.random.rand(20,20)
-    print(matrix.shape)
-    sns.heatmap(matrix)
+    h = 0.1
+
+    (P,Q) = forward_euler(h,10)
+    plt.scatter(P,Q)
     for i in range(1000):
         filename= "./image/output_{}.png".format(i)
-        print(filename)
-        print(os.path.exists(filename))
         if not os.path.exists(filename):
             break
 
