@@ -36,14 +36,15 @@ if __name__ =="__main__":
     h = 0.1
 
     (P,Q) = forward_euler(h,10)
-    plt.scatter(P,Q)
+    plt.scatter(P,Q,label = "forward_euler")
     (P,Q) = backward_euler(h,10)
-    plt.scatter(P,Q)
+    plt.scatter(P,Q,label = "backward_eular")
     for i in range(1000):
         filename= "./image/output_{}.png".format(i)
         if not os.path.exists(filename):
             break
 
+    plt.legend()
     plt.savefig(filename, bbox_inches='tight')
 
     plt.show()
