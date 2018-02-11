@@ -8,7 +8,8 @@ def forward_euler(h,T):
     p_res = []
     q_res = []
 
-    for i in range(100):
+    loop = int(T/h)
+    for i in range(loop):
         p_res.append(p)
         q_res.append(q)
         p1 = p + h*(-q)
@@ -23,7 +24,8 @@ def backward_euler(h,T):
     p_res = []
     q_res = []
 
-    for i in range(100):
+    loop = int(T/h)
+    for i in range(loop):
         p_res.append(p)
         q_res.append(q)
         p1 = (p - h*q)/(1 + h*h)
@@ -37,7 +39,8 @@ def symplectic(h,T):
     p_res = []
     q_res = []
 
-    for i in range(100):
+    loop = int(T/h)
+    for i in range(loop):
         p_res.append(p)
         q_res.append(q)
         p1 = (p - h*q)
@@ -51,7 +54,8 @@ def dai(h,T):
     p_res = []
     q_res = []
 
-    for i in range(100):
+    loop = int(T/h)
+    for i in range(loop):
         p_res.append(p)
         q_res.append(q)
         p1 = ((1-h*h/4)*p - h*q) / (1 + h*h/4)
@@ -64,8 +68,8 @@ def runge_kutta(h,T):
     q = 0  
     p_res = []
     q_res = []
-
-    for i in range(100):
+    loop = int(T/h)
+    for i in range(loop):
         p_res.append(p)
         q_res.append(q)
         p1 = -q
