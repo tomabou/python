@@ -59,6 +59,26 @@ def dai(h,T):
         p = p1
         q = q1
     return (p_res,q_res)
+def runge_kutta(h,T):
+    p = 1
+    q = 0  
+    p_res = []
+    q_res = []
+
+    for i in range(100):
+        p_res.append(p)
+        q_res.append(q)
+        p1 = -q
+        q1 = p
+        p2 = -(q+h*q1/2)
+        q2 = p + h*p1/2
+        p3 = -(q+h*q2/2)
+        q3 = p + h*p2/2
+        p4 = -(q+h*q3)
+        q4 = p + h*p3
+        p = p + h*(p1/6 + p2/3+p3/3+p4/6)
+        q = q + h*(q1/6 + q2/3+q3/3+q4/6)
+    return (p_res,q_res)
 if __name__ =="__main__":
     h = 0.1 
 
@@ -70,6 +90,8 @@ if __name__ =="__main__":
     plt.scatter(P,Q,label = "symplectic")
     (P,Q) = dai(h,10)
     plt.scatter(P,Q,label = "dai")
+    (P,Q) = runge_kutta(h,10)
+    plt.scatter(P,Q,label = "runge_kutta")
     for i in range(1000):
         filename= "./image/output_{}.png".format(i)
         if not os.path.exists(filename):
