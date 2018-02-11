@@ -86,22 +86,28 @@ def runge_kutta(h,T):
 if __name__ =="__main__":
     h = 0.1 
 
+    size = 10
+
+    plt.figure(figsize=(9,9))
+    plt.xlim(-1.5,1.5)
+    plt.ylim(-1.5,1.5)
     (P,Q) = forward_euler(h,10)
-    plt.scatter(P,Q,label = "forward_euler")
+    plt.scatter(P,Q,label = "forward_euler",s=size)
     (P,Q) = backward_euler(h,10)
-    plt.scatter(P,Q,label = "backward_eular")
+    plt.scatter(P,Q,label = "backward_eular",s = size)
     (P,Q) = symplectic(h,10)
-    plt.scatter(P,Q,label = "symplectic")
+    plt.scatter(P,Q,label = "symplectic", s = size)
     (P,Q) = dai(h,10)
-    plt.scatter(P,Q,label = "dai")
+    plt.scatter(P,Q,label = "dai", s=size)
     (P,Q) = runge_kutta(h,10)
-    plt.scatter(P,Q,label = "runge_kutta")
+    plt.scatter(P,Q,label = "runge_kutta", s=size)
     for i in range(1000):
         filename= "./image/output_{}.png".format(i)
         if not os.path.exists(filename):
             break
 
     plt.legend()
+
     plt.savefig(filename, bbox_inches='tight')
 
     plt.show()
