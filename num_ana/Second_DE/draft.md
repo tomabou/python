@@ -10,3 +10,14 @@
 ｒ方向にずれるのかΘ方向にずれるのか見たいのも図示してみたいけど
 
 あと、アニメーションも作りたいよねー
+
+## 台形則の軌道安定性について
+
+これは、時間に関して対称な計算になっている。このことがエネルギー保存を生み出している
+
+### 参考URL
+* http://www.kurims.kyoto-u.ac.jp/~kyodo/kokyuroku/contents/pdf/1070-4.pdf
+
+* http://web.econ.keio.ac.jp/staff/ito/pdf02/all.pdf
+
+これらは1998年頃の文章であるため情報が古い可能性がある。
