@@ -5,7 +5,7 @@ import numba
 
 @numba.jit
 def Hq(p,q):
-    return 0.1*q+1*q*q*q
+    return q#+1*q*q*q
 @numba.jit
 def Hp(p,q):
     return p
@@ -13,6 +13,26 @@ def Hp(p,q):
 @numba.jit
 def Hqt(p,q,t):
     return 0.1 * q+1*q*q*q #+ 12*np.cos(t)
+
+@numba.jit
+def reslist(h,T,initial,loopfunc):
+    (p,q) = initial
+    loop = int(T/h)
+
+    p_res = np.ndarray(loop)
+    q_res = np.ndarray(loop)
+
+    for i in range(loop):
+        p_res[i] = p
+        q_res[i] = q
+        p,q = loopfunc(p,q,h)
+    return (p_res,q_res)
+
+@numba.jit
+def forward_euler_loop(p,q,h):
+    p1 = p + h*(-Hq(p,q))
+    q1 = q + h*(Hp(p,q))
+    return (p1,q1)
 
 @numba.jit
 def forward_euler(h,T,initial):
@@ -106,8 +126,8 @@ def runge_kutta(h,T,inital):
         q = q + h*(q1/6 + q2/3+q3/3+q4/6)
     return (p_res,q_res)
 if __name__ =="__main__":
-    h = 0.3
-    time = 1000
+    h = 0.1
+    time = 10
     initial = (1,0)
 
     size = 2
@@ -117,16 +137,17 @@ if __name__ =="__main__":
     plt.figure(figsize=(9,9))
     plt.xlim(-lim,lim)
     plt.ylim(-lim,lim)
+    (P,Q) = reslist(h,time,initial,forward_euler_loop)
     #(P,Q) = forward_euler(h,time,initial)
-    #plt.scatter(P,Q,label = "forward_euler",s=size)
+    plt.scatter(P,Q,label = "forward_euler",s=size)
     #(P,Q) = backward_euler(h,time,initial)
     #plt.scatter(P,Q,label = "backward_eular",s = size)
-    (P,Q) = symplectic(h,time,initial)
-    plt.scatter(P,Q,label = "symplectic", s = size)
+    #(P,Q) = symplectic(h,time,initial)
+    #plt.scatter(P,Q,label = "symplectic", s = size)
     #(P,Q) = dai(h,time,initial)
     #plt.scatter(P,Q,label = "dai", s=size)
-    (P,Q) = runge_kutta(h,time,initial)
-    plt.scatter(P,Q,label = "runge_kutta", s=size)
+    #(P,Q) = runge_kutta(h,time,initial)
+    #plt.scatter(P,Q,label = "runge_kutta", s=size)
     for i in range(1000):
         filename= "./image/output_h={}_{}.png".format(h,i)
         if not os.path.exists(filename):
