@@ -1,7 +1,19 @@
+extern crate gnuplot;
+
+
+use gnuplot::{Figure, Color};
+
 fn main() {
     println!("Hello, world!");
     let (a,b) = runge_kutta_loop(2.0,3.0,0.1,100);
     println!("{},{}",a,b);
+    let mut fg = Figure::new();
+    fg.axes2d()
+    .lines(&[1, 2, 3], &[4, 5, 6], &[Color("blue")])
+    .lines(&[1, 2, 3], &[7, 6, 5], &[Color("red")]);
+
+    fg.set_terminal("png", "test.png");
+    fg.show();
 }
 
 fn del_h(q:f64,p:f64,t:f64)->(f64,f64){
@@ -18,5 +30,4 @@ fn runge_kutta_loop(q: f64, p: f64 ,h: f64,counter: i64)->(f64,f64){
     (q + h*(dq1/6.0 + dq2/3.0 + dq3/3.0 + dq4/6.0)
     ,p + h*(dp1/6.0 + dp2/3.0 + dp3/3.0 + dp4/6.0))
 }
-
 
