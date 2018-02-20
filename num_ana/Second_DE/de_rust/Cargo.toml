@@ -1,0 +1,6 @@
+[package]
+name = "de_rust"
+version = "0.1.0"
+authors = ["tomabou <kazukazu496@yahoo.co.jp>"]
+
+[dependencies]
