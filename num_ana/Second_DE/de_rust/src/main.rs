@@ -26,20 +26,27 @@ fn main() {
     let mut p_res = Vec::new(); 
     func_loop(init, loop_count, h,&mut q_res,&mut p_res);
 
-    let mut fg = Figure::new();
-    fg.axes2d()
-    .points(&q_res, &p_res, &[Color("blue")]);
-    println!("{:?}",p_res);
+    //let mut fg = Figure::new();
+    //fg.axes2d()
+    //.points(&q_res, &p_res, &[Color("blue")]);
 
-    fg.set_terminal("png", "test.png");
-    fg.show();
+    //fg.set_terminal("png", "test.png");
+    //fg.show();
     let mut calc_buf = vec![vec![0 as i32; imgy as usize]; imgx as usize];
 
     for i in 0..loop_count{
         let x = ((q_res[i]-2.0)/scalex) as i32;
         let y = ((p_res[i]+8.0)/scaley) as i32;
-        if 0<=x &&x <imgx as i32 && 0<=y && y<imgy as i32 {
-            calc_buf[x as usize][y as usize] += 1;
+        if 0<=x &&x+2 <imgx as i32 && 0<=y && y+2<imgy as i32 {
+            calc_buf[0+x as usize][y as usize] += 1;
+            calc_buf[1+x as usize][y as usize] += 2;
+            calc_buf[2+x as usize][y as usize] += 1;
+            calc_buf[0+x as usize][1+y as usize] += 2;
+            calc_buf[1+x as usize][1+y as usize] += 3;
+            calc_buf[2+x as usize][1+y as usize] += 2;
+            calc_buf[0+x as usize][2+y as usize] += 1;
+            calc_buf[1+x as usize][2+y as usize] += 2;
+            calc_buf[2+x as usize][2+y as usize] += 1;
         }
     }
     let mut max = 0;
@@ -50,13 +57,17 @@ fn main() {
     }
     println!("{}",max);
     for (x,y,pixel) in imgbuf.enumerate_pixels_mut(){
-        let normal = (1<<8) * calc_buf[x as usize][y as usize] /max ; 
-        *pixel = image::Luma([255 - normal as u8]) ;
+        let normal = std::cmp::min(255,(1<<11) * calc_buf[x as usize][y as usize] /max) ; 
+        
+        *pixel = image::LumaA([255 - normal as u8,255]) ;
+        if x==0 && y==0 {
+            *pixel = image::LumaA([255 - normal as u8,0]) ;
+        }
     }
 
     let fout = &mut File::create("testimg.png").unwrap();
 
-    image::ImageLuma8(imgbuf).save(fout, image::PNG).unwrap();
+    image::ImageLumaA8(imgbuf).save(fout, image::PNG).unwrap();
 }
 fn func_loop(init:(f64,f64),lp:usize,h:f64,q_res: &mut std::vec::Vec<f64> ,p_res :&mut  std::vec::Vec<f64>){
     let (mut q,mut p) = init;
