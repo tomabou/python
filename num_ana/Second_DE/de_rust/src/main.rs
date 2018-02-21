@@ -2,9 +2,25 @@ extern crate gnuplot;
 extern crate image;
 
 use gnuplot::{Figure, Color};
+use std::fs::File;
 
 fn main() {
-    println!("Hello, world!");
+    let imgx = 800;
+    let imgy = 800;
+
+    let scalex = 10.0/imgx as f64;
+    let scaley = 10.0/imgy as f64;
+
+    let mut imgbuf = image::ImageBuffer::new(imgx,imgy);
+    
+    for (x,y,pixel) in imgbuf.enumerate_pixels_mut(){
+       *pixel = image::Luma([(x/4) as u8]) 
+    }
+
+    let fout = &mut File::create("testimg.png").unwrap();
+
+    image::ImageLuma8(imgbuf).save(fout, image::PNG).unwrap();
+    
     let init = (1.0,0.0);
     let time = 1000.0;
     let h = 0.01;
@@ -29,7 +45,6 @@ fn func_loop(init:(f64,f64),time:f64,h:f64,q_res: &mut std::vec::Vec<f64> ,p_res
         for j in 0..1000{
             let t = (1000*i + j) as f64 * time;
             runge_kutta_loop(&mut q,&mut p, h, t);
-            
         }
     }
 }
