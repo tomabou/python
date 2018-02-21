@@ -1,56 +1,79 @@
 extern crate gnuplot;
 extern crate image;
 
-use gnuplot::{Figure, Color};
 use std::fs::File;
+use std::f64;
+
+
+use gnuplot::{Figure, Color};
+
 
 fn main() {
     let imgx = 800;
     let imgy = 800;
 
-    let scalex = 10.0/imgx as f64;
-    let scaley = 10.0/imgy as f64;
+    let scalex = 2.0/imgx as f64;
+    let scaley = 16.0/imgy as f64;
 
     let mut imgbuf = image::ImageBuffer::new(imgx,imgy);
     
+    
+    let init = (3.0,0.0);
+    let loop_count = 100000 as usize ;
+    let h = 2.0*std::f64::consts::PI / 100.0;
+    //let h = 0.01;
+    let mut q_res = Vec::new(); 
+    let mut p_res = Vec::new(); 
+    func_loop(init, loop_count, h,&mut q_res,&mut p_res);
+
+    let mut fg = Figure::new();
+    fg.axes2d()
+    .points(&q_res, &p_res, &[Color("blue")]);
+    println!("{:?}",p_res);
+
+    fg.set_terminal("png", "test.png");
+    fg.show();
+    let mut calc_buf = vec![vec![0 as i32; imgy as usize]; imgx as usize];
+
+    for i in 0..loop_count{
+        let x = ((q_res[i]-2.0)/scalex) as i32;
+        let y = ((p_res[i]+8.0)/scaley) as i32;
+        if 0<=x &&x <imgx as i32 && 0<=y && y<imgy as i32 {
+            calc_buf[x as usize][y as usize] += 1;
+        }
+    }
+    let mut max = 0;
+    for v in &calc_buf[..]{
+        for x in v{
+            max = std::cmp::max(max, *x);
+        }
+    }
+    println!("{}",max);
     for (x,y,pixel) in imgbuf.enumerate_pixels_mut(){
-       *pixel = image::Luma([(x/4) as u8]) 
+        let normal = (1<<8) * calc_buf[x as usize][y as usize] /max ; 
+        *pixel = image::Luma([255 - normal as u8]) ;
     }
 
     let fout = &mut File::create("testimg.png").unwrap();
 
     image::ImageLuma8(imgbuf).save(fout, image::PNG).unwrap();
-    
-    let init = (1.0,0.0);
-    let time = 1000.0;
-    let h = 0.01;
-    let mut q_res = Vec::new(); 
-    let mut p_res = Vec::new(); 
-    func_loop(init, time, h,&mut q_res,&mut p_res);
-    let mut fg = Figure::new();
-    fg.axes2d()
-    .points(q_res,p_res,&[Color("blue")]);
-
-    fg.set_terminal("png", "test.png");
-    fg.show();
 }
-fn func_loop(init:(f64,f64),time:f64,h:f64,q_res: &mut std::vec::Vec<f64> ,p_res :&mut  std::vec::Vec<f64>){
+fn func_loop(init:(f64,f64),lp:usize,h:f64,q_res: &mut std::vec::Vec<f64> ,p_res :&mut  std::vec::Vec<f64>){
     let (mut q,mut p) = init;
-    let lp = (time / (h* 1000.0)) as usize;
     q_res.reserve(lp);
     p_res.reserve(lp);
     for i in 0..lp{
         q_res.push(q) ;
         p_res.push(p) ;
-        for j in 0..1000{
-            let t = (1000*i + j) as f64 * time;
+        for j in 0..100{
+            let t = (100*i + j) as f64 * h;
             runge_kutta_loop(&mut q,&mut p, h, t);
         }
     }
 }
 
 fn del_h(q:f64,p:f64,t:f64)->(f64,f64){
-    (p,-q)
+    (p,-0.1*p - q*q*q + 12.0 * t.cos())
 }
 fn runge_kutta_loop(q:&mut f64, p:&mut f64 ,h: f64,t: f64){
     let (dq1,dp1) = del_h(*q, *p, t);
