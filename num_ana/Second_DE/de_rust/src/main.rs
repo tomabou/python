@@ -1,11 +1,11 @@
-extern crate gnuplot;
+//extern crate gnuplot;
 extern crate image;
 
 use std::fs::File;
 use std::f64;
 
 
-use gnuplot::{Figure, Color};
+//use gnuplot::{Figure, Color};
 
 
 fn main() {
@@ -22,9 +22,7 @@ fn main() {
     let loop_count = 100000 as usize ;
     let h = 2.0*std::f64::consts::PI / 100.0;
     //let h = 0.01;
-    let mut q_res = Vec::new(); 
-    let mut p_res = Vec::new(); 
-    func_loop(init, loop_count, h,&mut q_res,&mut p_res);
+    let (q_res,p_res) = func_loop(init, loop_count, h);
 
     //let mut fg = Figure::new();
     //fg.axes2d()
@@ -69,8 +67,10 @@ fn main() {
 
     image::ImageLumaA8(imgbuf).save(fout, image::PNG).unwrap();
 }
-fn func_loop(init:(f64,f64),lp:usize,h:f64,q_res: &mut std::vec::Vec<f64> ,p_res :&mut  std::vec::Vec<f64>){
+fn func_loop(init:(f64,f64),lp:usize,h:f64) -> (std::vec::Vec<f64> ,std::vec::Vec<f64>){
     let (mut q,mut p) = init;
+    let mut q_res = Vec::new(); 
+    let mut p_res = Vec::new(); 
     q_res.reserve(lp);
     p_res.reserve(lp);
     for i in 0..lp{
@@ -81,6 +81,7 @@ fn func_loop(init:(f64,f64),lp:usize,h:f64,q_res: &mut std::vec::Vec<f64> ,p_res
             runge_kutta_loop(&mut q,&mut p, h, t);
         }
     }
+    (q_res,p_res)
 }
 
 fn del_h(q:f64,p:f64,t:f64)->(f64,f64){
