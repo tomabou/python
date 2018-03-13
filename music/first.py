@@ -1,7 +1,6 @@
 import numpy as np
 import wave
 
-
 def sin_func(x):
     return np.sin(2*np.pi*x)
 
