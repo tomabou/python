@@ -18,17 +18,13 @@ def create_sound(h,l,BPM,framerate,v):
     x = x - np.floor(x)
     return v * san_func(x)
 
-def music_len(music,BPM,framerate):
-    n = music[-1][2]+music[-1][1]
-    return int(n*60/BPM*framerate)
-
 def tolen(n,BPM,framerate):
     return int(n*60/BPM*framerate)
 
 if __name__=="__main__":
     framerate = 44100
     BPM = 50
-    hertz = 221
+    hertz = 220
 
     """hight,len,start"""
     l =  int(25*60/BPM*framerate)
