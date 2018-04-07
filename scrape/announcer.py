@@ -24,6 +24,12 @@ def getInfo(name):
     return (birthday,hasband)
 
 def announcerNames():
+    name = urllib.parse.quote_plus("日本のアナウンサー一覧")
+    url = "https://ja.wikipedia.org/wiki/"+name
+    html = urlopen(url)
+    soup = BeautifulSoup(html,"lxml")
+    print(soup)
+
     names = ["江藤愛"]
     return names
 
@@ -37,4 +43,4 @@ if __name__=="__main__":
         hasbands.append(h)
     dic = {"birhday":birthdays, "hasband":hasbands, "name":names}
     df = pd.DataFrame.from_dict(dic)
-    print(df.to_csv())
+    #print(df.to_csv())
