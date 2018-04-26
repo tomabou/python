@@ -1,5 +1,12 @@
 import pandas as pd
 
 if __name__=="__main__":
-    join = pd.read_csv("datas/join.csv")
-    print(join)
+    joins = pd.read_csv("data/join.csv")
+    companys = pd.read_csv("data/company.csv")
+    lines = pd.read_csv("data/line.csv")
+    stations = pd.read_csv("data/station.csv")
+    
+    stid = stations["station_cd"]
+    n = len(stations)
+    print(n)
+    
