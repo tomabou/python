@@ -37,7 +37,6 @@ def calc():
     A = dict()
 
     for i in range(len(stations)):
-        
         v = stations["station_g_cd"][i]
         if v in A:
             A[v].append(stations["line_cd"][i])
@@ -50,6 +49,12 @@ def calc():
                 fr = line_cd_to_node[x]
                 to = line_cd_to_node[y]
                 has_edge[fr][to] = 1
+
+    for i in range(n):
+        if lines["e_status"][i] != 0:
+            for j in range(n):
+                has_edge[i][j] = 0
+                has_edge[j][i] = 0
     
     d = np.copy(has_edge)
 
