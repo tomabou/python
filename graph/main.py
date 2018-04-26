@@ -5,6 +5,15 @@ import matplotlib.pyplot as plt
 from numba import jit
 
 @jit
+def warshall(d,n):
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if(d[i][j] > d[i][k] + d[k][j]):
+                    d[i][j] = d[i][k] + d[k][j]
+    return d
+
+@jit
 def calc():
     joins = pd.read_csv("data/join.csv")
     companys = pd.read_csv("data/company.csv")
@@ -42,28 +51,44 @@ def calc():
                 to = line_cd_to_node[y]
                 has_edge[fr][to] = 1
     
-    d = has_edge
+    d = np.copy(has_edge)
 
     for i in range(n):
         for j in range(n):
             if d[i][j] == 0:
                 d[i][j] = 999
 
-    for i in range(n):
-        for j in range(n):
-            for k in range(n):
-                if(d[i][j] > d[i][k] + d[k][j]):
-                    d[i][j] = d[i][k] + d[k][j]
+    d = warshall(d,n)
     
     m = 0
+    start = 0
+    end =0
     for i in range(n):
         for j in range(n):
-            if d[i][j] >m:
+            if d[i][j] != 999 and d[i][j] >m:
+                start = i
+                end = j
                 m = d[i][j]
+            if i == j:
+                d[i][j] = 0
     np.savetxt("output/d.csv",d,delimiter=',',fmt="%.0f")
-    
-    print("")
     print(m)
+
+    cur = start
+    while cur != end:
+        print(lines["line_name"][cur])
+        for i in range(n):
+            if cur != i and has_edge[cur][i] == 1 and d[cur][end] == d[i][end] + 1:
+                cur = i
+                break
+
+    print(lines["line_name"][end])
+    
+
+    for i in range(n):
+        for j in range(n):
+            if d[i][j] == 999:
+                d[i][j] = -1
 
     sns.heatmap(has_edge)
     plt.show()
