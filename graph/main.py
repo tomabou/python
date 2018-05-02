@@ -79,6 +79,12 @@ def calc():
     np.savetxt("output/d.csv",d,delimiter=',',fmt="%.0f")
     print(m)
 
+    for i in range(n):
+        for j in range(n):
+            if d[i][j] == 26:
+                print(lines["line_name"][i],end=' ')
+                print(lines["line_name"][j])
+
     cur = start
     while cur != end:
         print(lines["line_name"][cur])
@@ -95,8 +101,29 @@ def calc():
             if d[i][j] == 999:
                 d[i][j] = -1
 
-    sns.heatmap(has_edge)
-    plt.show()
+    max_r = 999
+    center = 0
+    for i in range(n):
+        if d[i][end] == -1:
+            continue
+        m  = 0
+        for j in range(n):
+            if i!=j and d[i][j] != 999:
+                m = max(m,d[i][j])
+        if max_r > m and m != 999 :
+            center = i
+            max_r = m
+        if m == 13:
+            print("center is " + lines["line_name"][i])
+            print("radius is {}".format(max_r))
+
+
+
+    print("center is " + lines["line_name"][center])
+    print("radius is {}".format(max_r))
+
+#    sns.heatmap(has_edge)
+#    plt.show()
 
 
 if __name__ == "__main__":
