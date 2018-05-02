@@ -47,7 +47,7 @@ def calc():
 
 
     #j = 4544
-    for j in range(4540,4550):
+    for j in range(c):
         if not j in id_to_stcd:
             continue
         d = np.zeros(c, dtype=int)
@@ -65,9 +65,11 @@ def calc():
             if m < d[i]:
                 m = d[i]
                 x = i
-        print(stations[stations["station_cd"] == id_to_stcd[j]]["station_name"])
-        print(stations[stations["station_cd"] == id_to_stcd[x]]["station_name"])
-        print("len is {}".format(d[x]))
+        sname1 = stations[stations["station_cd"] == id_to_stcd[j]].iat[0,2]
+        sname2 = stations[stations["station_cd"] == id_to_stcd[x]].iat[0,2]
+        print(sname1,end=" ")
+        print(sname2,end=" ")
+        print(d[x])
 
 if __name__ == "__main__":
     calc()
