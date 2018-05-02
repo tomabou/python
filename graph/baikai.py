@@ -44,20 +44,14 @@ def calc():
             edges[x1].append(x2)
             edges[x2].append(x1)
 
-    for i in range(c):
-        if len(edges[i]) == 23:
-            for v in edges[i]:
-                sname1 = stations[stations["station_cd"] == id_to_stcd[v]].iat[0,2]
-                print(sname1,end=" ")
 
-    return 
-
-
+    baikai = np.zeros(c)
     #j = 4544
     for j in range(c):
         if not j in id_to_stcd:
             continue
         d = np.zeros(c, dtype=int)
+        g = np.zeros(c,dtype=int)
         que = collections.deque()
         que.append(j)
         while len(que) > 0:
@@ -66,6 +60,30 @@ def calc():
                 if d[nv] == 0 and nv != j:
                     d[nv] = d[v] +1
                     que.append(nv)
+
+        g[j] = 1
+        que = collections.deque()
+        que.append(j)
+        while len(que) > 0:
+            v = que.popleft()
+            for nv in edges[v]:
+                if d[nv] == d[v]+1:
+                    g[nv] += g[v]
+                    que.append(nv)
+        
+        maxlen = np.max(d)
+        depthlist = []
+        for i in range(maxlen+1):
+            depthlist.append([])
+        for i in range(c):
+            depthlist[d[i]].append(i)
+
+        for vs in reversed(depthlist):
+            for v in vs:
+                for nv in edges[v]:
+                    if d[nv] == d[v] + 1:
+                        baikai[v] += (baikai[nv]) * g[v]/g[nv]
+
         m = 0
         x = 0
         for i in range(c):
