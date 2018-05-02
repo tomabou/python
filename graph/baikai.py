@@ -44,22 +44,11 @@ def calc():
             edges[x1].append(x2)
             edges[x2].append(x1)
 
-    c = 10
-    edges=[]
-    for i in range(10):
-        edges.append([])
-    for i in range(8):
-        edges[i].append(i+1)
-        edges[i+1].append(i)
-    edges[3].append(4)
-    edges[4].append(3)
-        
 
     baikai = np.zeros(c)
-    #j = 4544
     for j in range(c):
-#        if not j in id_to_stcd:
-#            continue
+        if not j in id_to_stcd:
+            continue
         d = np.zeros(c, dtype=int)
         que = collections.deque()
         que.append(j)
@@ -70,13 +59,7 @@ def calc():
                     d[nv] = d[v] +1
                     que.append(nv)
 
-        print("d   ",end='')
-        for i in range(c):
-            print(d[i],end = ' ')
-        print("")
-
-
-        g = np.zeros(c,dtype=int)
+        g = np.zeros(c)
         used = np.zeros(c,dtype = int)
         g[j] = 1
         used[j]=1
@@ -90,11 +73,6 @@ def calc():
                 if used[nv]==0:
                     que.append(nv)
                     used[nv] = 1
-                    
-        print("g   ",end='')
-        for i in range(c):
-            print(g[i],end = ' ')
-        print("")
         
         maxlen = np.max(d)
         depthlist = []
@@ -104,13 +82,6 @@ def calc():
             if d[i] > 0:
                 depthlist[d[i]].append(i)
         
-        for i in range(len(depthlist)):
-            print("{} is".format(i),end=' ')
-            for v in depthlist[i]:
-                print(v,end=' ')
-            print("")
-        print("\n")
-
         new_baikai = np.zeros(c)
         for vs in reversed(depthlist):
             for v in vs:
@@ -121,16 +92,11 @@ def calc():
         baikai += new_baikai
 
     for i in range(c):
+        if not i in id_to_stcd:
+            continue
+        sname1 = stations[stations["station_cd"] == id_to_stcd[i]].iat[0,2]
+        print(sname1,end=" ")
         print(baikai[i])
-
-    m = 0
-    x = 0
-    for i in range(c):
-        if m < baikai[i]:
-            m = baikai[i]
-            x = i
-    #sname1 = stations[stations["station_cd"] == id_to_stcd[x]].iat[0,2]
-    #print(sname1,end=" ")
 
 if __name__ == "__main__":
     calc()
