@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 import numba 
+import matplotlib.pyplot as plt
 
 prob1 = [
     [0,8,6,0,0,0,1,0,9],
@@ -120,17 +121,24 @@ class sudoku:
 
 y = sudoku(prob3)
 print(y.board)
-for i in range(1, 10000000):
+
+xs = []
+ys = []
+for i in range(1, 50000000):
     #1.3 ~ 1.5ぐらいで煮詰めたtら解けた
-    b = 1.3 +  0.0000001 * i
+    b = 1.3 +  0.00000001 * i
     y.rand_change(b)
     if y.E == 0:
         break
     if i % 10000 == 0:
         print(y.E)
         print(b)
+        xs.append(b)
         print(y.ans)
+        ys.append(y.E)
 
+plt.scatter(xs,ys)
+plt.show()
 y.show()
 
 
