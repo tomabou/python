@@ -1,7 +1,6 @@
 import numpy as np
 import math
-
-
+import copy
 
 class board:
     def __init__(self,n):
@@ -19,9 +18,9 @@ class board:
                 if (x // 8) % 2 == 1:
                     print("\033[9{}mA\033[0m".format(x % 8), end='   ')
             print("")
-            print(" "*2 * (self.n-i),end='')
             if i == self.n - 1:
                 break
+            print(" "*2 * (self.n-i),end='')
             for j in range(i+1):
                 x = self.bd[(2*i+1,j)]
                 if (x // 8) % 2 == 0:
@@ -35,6 +34,8 @@ class board:
             for j in range(i + 1):
                 if self.bd[(2 * i, j)] == 0:
                     return (2*i,j)
+            if i == self.n - 1:
+                break
             for j in range(i + 1):
                 if self.bd[(2 * i+1, j)] == 0:
                     return (2*i+1,j)
@@ -69,8 +70,6 @@ class board:
                     if self.bd[(a + 2 * i, b + i+j )] != 0:
                         return False
             return True
-                
-                    
 
     def put(self, pos, size):
         (a,b) = pos
@@ -91,10 +90,45 @@ class board:
                     self.bd[(a + 2 * i, b + j+i )] = bd.label 
         bd.label += 1
 
+    def is_filled(self):
+        for i in range(self.n):
+            for j in range(i + 1):
+                if self.bd[(2 * i, j)] == 0:
+                    return False
+            if i == self.n - 1:
+                break
+            for j in range(i + 1):
+                if self.bd[(2 * i+1, j)] == 0:
+                    return False
+        return True
+
+
+
+def dfs(bd):
+    if bd.is_filled():
+        return [bd]
+    ans = []
+    pos = bd.smallest_gap()
+    for size in range(1, bd.n + 1):
+        if bd.can_put(pos, size):
+            nbd = copy.deepcopy(bd)
+            nbd.put(pos,size)    
+            ans.extend(dfs(nbd))
+    return ans
+
+def dfs_count(bd):
+    if bd.is_filled():
+        return 1
+    ans = 0 
+    pos = bd.smallest_gap()
+    for size in range(1, bd.n + 1):
+        if bd.can_put(pos, size):
+            nbd = copy.deepcopy(bd)
+            nbd.put(pos,size)    
+            ans += dfs_count(nbd)
+    return ans
+
 if __name__ == "__main__":
-    bd = board(9)
-    print(bd.can_put((9, 1), 4))
-    bd.put((9, 1),4 )
-    bd.show()
-
-
+    bd = board(8)
+    ans = dfs_count(bd)
+    print(ans)
