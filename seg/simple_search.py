@@ -7,6 +7,7 @@ class board:
         self.bd = np.zeros((2*n-1,n),dtype = int)
         self.n = n
         self.label = 1
+        self.filled = 0
 
     def show(self):
         for i in range(self.n):
@@ -76,33 +77,23 @@ class board:
         if a % 2 == 0:#上向きの三角形
             for i in range(size):
                 for j in range(i + 1):
-                    self.bd[(2 * i+a, j+b)] = bd.label
+                    self.bd[(2 * i+a, j+b)] = self.label
                 if i == size - 1:
                     break
                 for j in range(i + 1):
-                    self.bd[(2 * i+1+a, j+b)] = bd.label 
+                    self.bd[(2 * i+1+a, j+b)] = self.label 
         else: #下向きの三角形
             for i in range(size):
-                self.bd[(a, b + i)] = bd.label
+                self.bd[(a, b + i)] = self.label
             for i in range(1, size):
                 for j in range(0, size - i):
-                    self.bd[(a - 1 + 2 * i, b + j+i  )] = bd.label
-                    self.bd[(a + 2 * i, b + j+i )] = bd.label 
-        bd.label += 1
+                    self.bd[(a - 1 + 2 * i, b + j+i  )] = self.label
+                    self.bd[(a + 2 * i, b + j+i )] = self.label 
+        self.label += 1
+        self.filled += size*size
 
     def is_filled(self):
-        for i in range(self.n):
-            for j in range(i + 1):
-                if self.bd[(2 * i, j)] == 0:
-                    return False
-            if i == self.n - 1:
-                break
-            for j in range(i + 1):
-                if self.bd[(2 * i+1, j)] == 0:
-                    return False
-        return True
-
-
+        return self.filled == self.n * self.n
 
 def dfs(bd):
     if bd.is_filled():
@@ -129,6 +120,6 @@ def dfs_count(bd):
     return ans
 
 if __name__ == "__main__":
-    bd = board(8)
+    bd = board(7)
     ans = dfs_count(bd)
     print(ans)
