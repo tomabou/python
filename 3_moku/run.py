@@ -53,7 +53,7 @@ class board(object):
 
 if __name__ == '__main__':
     result = [0 for _ in range(3)]
-    for i in range(10000):
+    for i in range(100000):
         b = board()
         res = b.run_game()
         result[res] += 1
