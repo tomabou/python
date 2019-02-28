@@ -51,5 +51,18 @@ def pause_plot():
     fig, ax = plt.subplots(1, 1)
 
 
+def test():
+    np.set_printoptions(precision=3, suppress=True)
+    Vx, Vy, P, ax, ay, b = initialize(10, 10)
+    P[5, 5] = 1
+    dx = 0.1
+    dy = 0.1
+    dt = 0.1
+    k = 0.1
+    for i in range(10):
+        print(P)
+        Vx, Vy, P = leapfrog(dx, dy, dt, ax, ay, b, Vx, Vy, P, k)
+
+
 if __name__ == "__main__":
-    pause_plot()
+    test()
