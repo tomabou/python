@@ -1,3 +1,4 @@
+import cProfile
 import matplotlib.animation as animation
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,16 +45,35 @@ def calc_NP(dx, dy, dt, Vx, Vy, P, b, k):
     return NP/(1/dt + b/2)
 
 
-# @numba.jit
-def leapfrog(dx, dy, dt, ax, ay, b, Vx, Vy, P, k):
+class BOUND(object):
+    def __init__(self, x, y):
+        self.VxB = np.ones((x, y))
+        self.VyB = np.ones((x, y))
+        self.PB = np.ones((x, y))
+
+        for i in range(x):
+            self.VxB[i][0] = 0
+            self.VxB[i][0] = 0
+        for i in range(y):
+            self.VyB[x-1][i] = 0
+            self.VyB[x-1][i] = 0
+
+        for i in range(x//3, 2 * x//3):
+            for j in range(4):
+                self.VyB[i][y//2+j] = 0
+                self.VxB[i][y//2+j] = 0
+                self.PB[i][y//2+j] = 0
+
+    def __call__(self, Vx, Vy, P):
+        return (self.VxB * Vx, self.VyB * Vy, self.PB * P)
+
+
+def leapfrog(dx, dy, dt, ax, ay, b, Vx, Vy, P, k, bound):
     NVx = calc_NVx(dx, dt, ax, Vx, P)
     NVy = calc_NVy(dy, dt, ay, Vy, P)
     NP = calc_NP(dx, dy, dt, NVx, NVy, P, b, k)
+    NVx, NVy, NP = bound(NVx, NVy, NP)
     return NVx, NVy, NP
-
-
-def pause_plot():
-    fig, ax = plt.subplots(1, 1)
 
 
 def test():
@@ -67,12 +87,13 @@ def test():
     for i in range(10):
         print(P)
 
-        Vx, Vy, P = leapfrog(dx, dy, dt, ax, ay, b, Vx, Vy, P, k)
+        Vx, Vy, P = leapfrog(dx, dy, dt, ax, ay, b, Vx, Vy, P, k, bound)
 
 
 def draw_test():
     np.set_printoptions(precision=3, suppress=True)
-    Vx, Vy, P, ax, ay, b = initialize(100, 100)
+    Vx, Vy, P, ax, ay, b = initialize(50, 50)
+    bound = BOUND(50, 50)
     for i in range(35, 40):
         for j in range(35, 40):
             P[i, j] = 1
@@ -82,19 +103,19 @@ def draw_test():
     k = 0.1
     fig = plt.figure()
     ims = []
-    for i in range(10):
+    for i in range(200):
         print(P)
 
-        Vx, Vy, P = leapfrog(dx, dy, dt, ax, ay, b, Vx, Vy, P, k)
-        im = plt.imshow(P, animated=True)
+        Vx, Vy, P = leapfrog(dx, dy, dt, ax, ay, b, Vx, Vy, P, k, bound)
+        im = plt.imshow(P, animated=True, vmin=-0.1, vmax=0.2)
         ims.append([im])
     ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
                                     repeat_delay=1000)
 
+    #ani.save('anim.mp4', writer="ffmpeg")
     plt.show()
 
 
-import cProfile
 if __name__ == "__main__":
     #pr = cProfile.Profile()
     # pr.enable()
